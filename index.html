@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolSphere — Premium Online Utility Hub</title>
+    
+    <!-- Tailwind CSS Engine -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ChartJS (For Loan EMI Graphing) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- QRCodeJS (For Local QR Engine) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            indigo: '#6366f1',
+                            purple: '#a855f7',
+                            blue: '#3b82f6',
+                            dark: '#0b0d19',
+                            darkCard: '#13162b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Modern Glassmorphic and Scroll Settings */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .dark .glass-panel {
+            background: rgba(19, 22, 43, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .workspace-drawer {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-[#090a14] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen overflow-x-hidden relative">
+
+    <!-- Gradient Ambient Orbs -->
+    <div class="absolute top-[-20%] left-[-10%] w-[50%] aspect-square rounded-full bg-brand-indigo/10 dark:bg-brand-indigo/5 blur-[120px] pointer-events-none z-0"></div>
+    <div class="absolute bottom-[10%] right-[-10%] w-[45%] aspect-square rounded-full bg-brand-purple/10 dark:bg-brand-purple/5 blur-[120px] pointer-events-none z-0"></div>
+
+    <div class="relative z-10 flex flex-col min-h-screen">
+        
+        <!-- HEADER -->
+        <header class="glass-panel sticky top-0 z-40 transition-all border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="resetView()">
+                    <div class="bg-gradient-to-tr from-brand-indigo to-brand-purple w-10 h-10 rounded-xl flex items-center justify-center text-white font-extrabold shadow-md shadow-brand-indigo/30">
+                        🌀
+                    </div>
+                    <div>
+                        <h1 class="font-bold tracking-tight text-lg leading-tight bg-gradient-to-r from-brand-indigo to-brand-purple bg-clip-text text-transparent">ToolSphere</h1>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-wider uppercase">Online Utility Hub</p>
+                    </div>
+                </div>
+
+                <!-- Controls & Desktop Search -->
+                <div class="flex items-center gap-4">
+                    <!-- Search Indicator trigger -->
+                    <div class="relative hidden md:block">
+                        <input type="text" id="global-search-input" placeholder="Press '/' to search..." class="w-64 pl-9 pr-4 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/40 focus:border-brand-indigo focus:ring-1 focus:ring-brand-indigo outline-none transition-all">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+                    </div>
+
+                    <!-- Theme Toggler -->
+                    <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/40 hover:scale-105 active:scale-95 transition-all text-sm" title="Toggle Theme">
+                        <span class="dark:hidden">🌙</span>
+                        <span class="hidden dark:inline">☀️</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN VIEWPORT -->
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
+            
+            <!-- HERO SECTION -->
+            <section id="hero-area" class="text-center py-10 space-y-6 max-w-3xl mx-auto">
+                <span class="inline-flex items-center gap-1.5 bg-brand-indigo/10 border border-brand-indigo/20 text-brand-indigo dark:text-indigo-300 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider">
+                    ⚡ Instant & Client-Side Processing
+                </span>
+                <h2 class="font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-tight text-slate-900 dark:text-white">
+                    Everything You Need.<br>
+                    <span class="bg-gradient-to-r from-brand-indigo via-brand-purple to-brand-blue bg-clip-text text-transparent">One Powerful Toolbox.</span>
+                </h2>
+                <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-xl mx-auto">
+                    Fast, secure, and beautiful online tools running directly in your browser. No registration required, zero telemetry tracking.
+                </p>
+                
+                <div class="flex items-center justify-center gap-4 flex-wrap">
+                    <a href="#toolbox" class="bg-brand-indigo hover:bg-brand-indigo/90 text-white px-6 py-3 rounded-2xl text-sm font-semibold transition-all shadow-lg shadow-brand-indigo/20 hover:-translate-y-0.5">
+                        Explore Tools
+                    </a>
+                    <button onclick="filterCategory('favorites')" class="border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 px-6 py-3 rounded-2xl text-sm font-semibold transition-all flex items-center gap-2">
+                        ⭐ Favorite Tools
+                    </button>
+                </div>
+
+                <!-- Stats indicators -->
+                <div class="grid grid-cols-3 gap-4 border-t border-slate-200/50 dark:border-slate-800/50 pt-8 mt-6 text-center">
+                    <div>
+                        <div class="text-2xl font-extrabold text-slate-900 dark:text-white">15+</div>
+                        <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">SaaS-Grade Utilities</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-slate-900 dark:text-white">Instant</div>
+                        <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">Client Results</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-slate-900 dark:text-white">Free</div>
+                        <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">No Sign Up Required</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RECENTS & QUICK ACCESS BAR -->
+            <section id="recent-bar-container" class="hidden mb-10 max-w-3xl mx-auto">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+                    ⏱️ Recently Used
+                </h3>
+                <div id="recent-tools-list" class="flex flex-wrap gap-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- TOOLBOX WORKSPACE (CATEGORIES & CARDS) -->
+            <section id="toolbox" class="space-y-8 scroll-mt-20">
+                <!-- Search & Filters Segment -->
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-200/50 dark:border-slate-800/50 pb-6">
+                    <!-- Categories Toggles -->
+                    <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar" id="category-filters-container">
+                        <button onclick="filterCategory('all')" id="cat-all" class="cat-btn active bg-brand-indigo text-white px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all">All Tools</button>
+                        <button onclick="filterCategory('calculators')" id="cat-calculators" class="cat-btn border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900/60 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all">Calculators</button>
+                        <button onclick="filterCategory('converters')" id="cat-converters" class="cat-btn border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900/60 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all">Converters</button>
+                        <button onclick="filterCategory('generators')" id="cat-generators" class="cat-btn border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900/60 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all">Generators</button>
+                        <button onclick="filterCategory('productivity')" id="cat-productivity" class="cat-btn border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900/60 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all">Productivity</button>
+                        <button onclick="filterCategory('favorites')" id="cat-favorites" class="cat-btn border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900/60 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all">⭐ Favorites</button>
+                    </div>
+
+                    <!-- Mobile Search Input inside toolbar -->
+                    <div class="relative w-full md:w-64 md:hidden">
+                        <input type="text" id="mobile-search-input" placeholder="Search utilities..." class="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/40 outline-none">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+                    </div>
+                </div>
+
+                <!-- Grid of Tool Cards -->
+                <div id="tools-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Injected dynamically by JS template -->
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="border-t border-slate-200/50 dark:border-slate-800/50 mt-16 bg-white/30 dark:bg-slate-950/20 py-8 text-center text-xs text-slate-400 font-medium">
+            <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>© 2026 ToolSphere. Engineered for privacy and offline efficiency.</div>
+                <div class="flex items-center gap-4">
+                    <span class="cursor-pointer hover:text-brand-indigo" onclick="showShortcutsHelp()">Shortcuts (Ctrl+K)</span>
+                    <span>•</span>
+                    <span class="cursor-pointer hover:text-brand-indigo" onclick="clearUserData()">Reset Storage</span>
+                </div>
+            </div>
+        </footer>
+
+        <!-- WORKSPACE OVERLAY DRAWER -->
+        <div id="workspace-drawer-overlay" class="fixed inset-0 bg-slate-950/50 backdrop-blur-sm z-50 pointer-events-none opacity-0 transition-opacity duration-300 hidden flex items-center justify-end">
+            <!-- Actual Drawer Body -->
+            <div id="workspace-drawer" class="workspace-drawer w-full max-w-3xl h-full bg-white dark:bg-brand-dark border-l border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col justify-between transform translate-x-full relative">
+                
+                <!-- Drawer Header -->
+                <div class="border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between bg-slate-50/55 dark:bg-slate-900/20 backdrop-blur-md">
+                    <div class="flex items-center gap-3">
+                        <div id="drawer-tool-icon" class="text-2xl">⚡</div>
+                        <div>
+                            <h3 id="drawer-tool-name" class="font-bold text-lg leading-tight">Tool Workspace</h3>
+                            <p id="drawer-tool-desc" class="text-xs text-slate-400"></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <!-- Toggle Favorite status from within the tool header -->
+                        <button id="drawer-favorite-toggle" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-sm" title="Bookmark tool">⭐</button>
+                        <button onclick="closeActiveWorkspace()" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-sm" title="Close Workspace (Esc)">❌</button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Content Area -->
+                <div id="workspace-content" class="flex-grow overflow-y-auto px-6 py-8">
+                    <!-- Populated dynamically via JS template engine -->
+                </div>
+
+                <!-- Drawer Status/Footer -->
+                <div class="border-t border-slate-200 dark:border-slate-800 px-6 py-4 bg-slate-50/30 dark:bg-slate-900/10 text-[11px] text-slate-400 flex justify-between items-center">
+                    <span>⚡ Secure client side rendering</span>
+                    <button onclick="closeActiveWorkspace()" class="hover:text-brand-indigo">Close Workspace (Esc)</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Global Toast Popup -->
+        <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 dark:bg-slate-800 border border-slate-700 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg pointer-events-none transform translate-y-16 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+            <span>✨</span> <span id="toast-text">System notification</span>
+        </div>
+
+    </div>
+
+    <!-- CORE LOGIC & TOOLS TEMPLATE ENGINE -->
+    <script>
+        // GLOBALLY DEFINED STATE CONTROL
+        const AppState = {
+            theme: 'dark',
+            searchQuery: '',
+            activeCategory: 'all',
+            favorites: [],
+            recents: [],
+            activeToolId: null,
+            calculator: {
+                currentInput: '',
+                history: []
+            }
+        };
+
+        // Static Registry of 15 Tools
+        const ToolsRegistry = [
+            { id: "calc", name: "Smart Calculator", desc: "Scientific calculations with real-time history logging.", category: "calculators", icon: "🔢" },
+            { id: "len", name: "Length Converter", desc: "Fast conversions between metric and imperial dimensions.", category: "converters", icon: "📏" },
+            { id: "weight", name: "Weight Converter", desc: "Convert ounces, pounds, kilograms, and heavy masses.", category: "converters", icon: "⚖️" },
+            { id: "temp", name: "Temperature Converter", desc: "Instantly switch Celsius, Fahrenheit, and Kelvin scales.", category: "converters", icon: "🌡️" },
+            { id: "currency", name: "Currency Converter", desc: "Convert global assets based on local custom exchange metrics.", category: "converters", icon: "💱" },
+            { id: "age", name: "Age Calculator", desc: "Exact years, months, and days milestone countdown.", category: "calculators", icon: "📅" },
+            { id: "bmi", name: "BMI Calculator", desc: "Interactive body mass indexes with clean visual health category indicator.", category: "calculators", icon: "🫁" },
+            { id: "percentage", name: "Percentage Calculator", desc: "Three-way formula checks, increases, decreases, and discounts.", category: "calculators", icon: "📈" },
+            { id: "timezone", name: "Time Zone Converter", desc: "World clocks with light/dark day indicators for planning meetings.", category: "productivity", icon: "🌐" },
+            { id: "qrcode", name: "QR Code Generator", desc: "Generate vector codes instantly for sharing links & contacts.", category: "generators", icon: "🔗" },
+            { id: "password", name: "Password Generator", desc: "Strong random string layouts featuring custom strength indicators.", category: "generators", icon: "🔑" },
+            { id: "text", name: "Text Utilities", desc: "Counters, whitespace removal, read estimators, and casing.", category: "productivity", icon: "📝" },
+            { id: "emi", name: "Loan EMI Calculator", desc: "Calculate monthly amortizations with Principal/Interest breakdown.", category: "calculators", icon: "🏦" },
+            { id: "unit", name: "Unit Converter Hub", desc: "Advanced speed, storage size, area, and volume conversion.", category: "converters", icon: "📦" },
+            { id: "random", name: "Random Suite", desc: "Spawn colors, flips, or numbers instantly.", category: "generators", icon: "🎲" }
+        ];
+
+        // --- LIFECYCLE MANAGEMENT ---
+        window.addEventListener('DOMContentLoaded', () => {
+            loadPersistenceState();
+            renderToolGrid();
+            renderRecentBar();
+            updateGlobalStyle();
+
+            // Setup shortcut listeners
+            window.addEventListener('keydown', handleGlobalKeyboardShortcuts);
+
+            // Hook Global Search Fields
+            const desktopSearch = document.getElementById('global-search-input');
+            const mobileSearch = document.getElementById('mobile-search-input');
+            
+            [desktopSearch, mobileSearch].forEach(input => {
+                input.addEventListener('input', (e) => {
+                    AppState.searchQuery = e.target.value.toLowerCase();
+                    renderToolGrid();
+                });
+            });
+        });
+
+        function handleGlobalKeyboardShortcuts(e) {
+            // "Ctrl+K" or "/" opens global search
+            if ((e.ctrlKey && e.key === 'k') || e.key === '/') {
+                e.preventDefault();
+                const search = window.innerWidth > 768 ? document.getElementById('global-search-input') : document.getElementById('mobile-search-input');
+                search.focus();
+                search.select();
+            }
+            // "Esc" closes active drawer
+            if (e.key === 'Escape' && AppState.activeToolId) {
+                closeActiveWorkspace();
+            }
+        }
+
+        // --- THEME CONTROL ---
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                AppState.theme = 'light';
+                showToast("Soft Light Mode activated");
+            } else {
+                html.classList.add('dark');
+                AppState.theme = 'dark';
+                showToast("Deep Dark Mode active 🌌");
+            }
+            savePersistenceState();
+        }
+
+        function updateGlobalStyle() {
+            const html = document.documentElement;
+            if (AppState.theme === 'dark') {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+        }
+
+        // --- RENDER DASHBOARD CARD MATRIX ---
+        function renderToolGrid() {
+            const grid = document.getElementById('tools-grid');
+            grid.innerHTML = '';
+
+            let filteredList = ToolsRegistry.filter(tool => {
+                const matchesSearch = tool.name.toLowerCase().includes(AppState.searchQuery) || tool.desc.toLowerCase().includes(AppState.searchQuery);
+                const matchesCat = AppState.activeCategory === 'all' || 
+                                    (AppState.activeCategory === 'favorites' && AppState.favorites.includes(tool.id)) ||
+                                    tool.category === AppState.activeCategory;
+                return matchesSearch && matchesCat;
+            });
+
+            if (filteredList.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center space-y-3">
+                        <div class="text-4xl">🔍</div>
+                        <h4 class="font-bold text-lg">No tools match your query</h4>
+                        <p class="text-xs text-slate-400">Try checking the spelling or try selecting a different category.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredList.forEach(tool => {
+                const isFavorite = AppState.favorites.includes(tool.id);
+                const card = document.createElement('div');
+                card.className = "glass-panel p-6 rounded-2xl hover:shadow-xl hover:scale-[1.02] cursor-pointer hover:border-brand-indigo/30 transition-all duration-300 relative group flex flex-col justify-between h-52";
+                card.onclick = () => launchToolWorkspace(tool.id);
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-3xl">${tool.icon}</span>
+                            <button onclick="toggleFavorite(event, '${tool.id}')" class="p-1.5 rounded-xl hover:bg-slate-100/50 dark:hover:bg-slate-800/40 text-sm opacity-60 hover:opacity-100 transition-opacity" title="Favorite">
+                                ${isFavorite ? '⭐' : '☆'}
+                            </button>
+                        </div>
+                        <h4 class="font-extrabold text-base text-slate-950 dark:text-white group-hover:text-brand-indigo transition-colors">${tool.name}</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed line-clamp-2">${tool.desc}</p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs font-bold text-brand-indigo dark:text-indigo-400 mt-4 pt-2 border-t border-slate-200/20">
+                        <span class="uppercase tracking-widest text-[9px] text-slate-400">${tool.category}</span>
+                        <span>Open →</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- FAVORITES & RECENTS CONTROL ---
+        function toggleFavorite(event, id) {
+            if (event) event.stopPropagation();
+            const idx = AppState.favorites.indexOf(id);
+            if (idx > -1) {
+                AppState.favorites.splice(idx, 1);
+                showToast("Removed from bookmarks ⭐");
+            } else {
+                AppState.favorites.push(id);
+                showToast("Added to bookmarks ⭐");
+            }
+            savePersistenceState();
+            renderToolGrid();
+            updateDrawerHeaderState();
+        }
+
+        function filterCategory(catKey) {
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active', 'bg-brand-indigo', 'text-white'));
+            const activeBtn = document.getElementById(`cat-${catKey}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-brand-indigo', 'text-white');
+            }
+            AppState.activeCategory = catKey;
+            renderToolGrid();
+        }
+
+        function registerRecentUse(id) {
+            const idx = AppState.recents.indexOf(id);
+            if (idx > -1) AppState.recents.splice(idx, 1);
+            AppState.recents.unshift(id);
+            if (AppState.recents.length > 5) AppState.recents.pop();
+            savePersistenceState();
+            renderRecentBar();
+        }
+
+        function renderRecentBar() {
+            const bar = document.getElementById('recent-bar-container');
+            const list = document.getElementById('recent-tools-list');
+            list.innerHTML = '';
+
+            const validRecents = AppState.recents.map(id => ToolsRegistry.find(t => t.id === id)).filter(Boolean);
+
+            if (validRecents.length === 0) {
+                bar.classList.add('hidden');
+                return;
+            }
+            bar.classList.remove('hidden');
+
+            validRecents.forEach(tool => {
+                const btn = document.createElement('button');
+                btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/30 hover:border-brand-indigo/30 text-xs font-semibold transition-all";
+                btn.onclick = () => launchToolWorkspace(tool.id);
+                btn.innerHTML = `<span>${tool.icon}</span> ${tool.name}`;
+                list.appendChild(btn);
+            });
+        }
+
+        // --- DRAWER LAYOUT CONTROLLER ---
+        function launchToolWorkspace(id) {
+            const tool = ToolsRegistry.find(t => t.id === id);
+            if (!tool) return;
+
+            AppState.activeToolId = id;
+            registerRecentUse(id);
+
+            // Mount values to drawer
+            document.getElementById('drawer-tool-icon').textContent = tool.icon;
+            document.getElementById('drawer-tool-name').textContent = tool.name;
+            document.getElementById('drawer-tool-desc').textContent = tool.desc;
+            
+            updateDrawerHeaderState();
+
+            // Render Dynamic UI Layout inside Drawer
+            const contentBox = document.getElementById('workspace-content');
+            contentBox.innerHTML = renderToolSpecificHTML(id);
+            
+            // Post-rendering actions / initialization loops
+            initializeToolInteractiveEvents(id);
+
+            // Open overlay drawer with GSAP-like fluid transition
+            const overlay = document.getElementById('workspace-drawer-overlay');
+            const drawer = document.getElementById('workspace-drawer');
+
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+                overlay.classList.add('pointer-events-auto');
+                drawer.classList.remove('translate-x-full');
+            }, 50);
+        }
+
+        function closeActiveWorkspace() {
+            const overlay = document.getElementById('workspace-drawer-overlay');
+            const drawer = document.getElementById('workspace-drawer');
+
+            drawer.classList.add('translate-x-full');
+            overlay.classList.add('opacity-0');
+            overlay.classList.remove('pointer-events-auto');
+            
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                AppState.activeToolId = null;
+                document.getElementById('workspace-content').innerHTML = ''; // Clear memory
+            }, 3000);
+        }
+
+        function updateDrawerHeaderState() {
+            const favToggle = document.getElementById('drawer-favorite-toggle');
+            if (!AppState.activeToolId || !favToggle) return;
+            const isFav = AppState.favorites.includes(AppState.activeToolId);
+            favToggle.innerHTML = isFav ? '⭐' : '☆';
+            favToggle.onclick = (e) => toggleFavorite(e, AppState.activeToolId);
+        }
+
+        function resetView() {
+            closeActiveWorkspace();
+            AppState.searchQuery = '';
+            document.getElementById('global-search-input').value = '';
+            document.getElementById('mobile-search-input').value = '';
+            filterCategory('all');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+        // ==========================================
+        //  DYNAMIC WORKSPACE HTML ROUTER
+        // ==========================================
+        function renderToolSpecificHTML(id) {
+            switch(id) {
+                case 'calc':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <div class="glass-panel p-4 rounded-2xl border flex flex-col justify-between text-right h-24">
+                                <span id="calc-history" class="text-xs text-slate-400 font-mono overflow-x-auto whitespace-nowrap">History logged</span>
+                                <span id="calc-display" class="text-3xl font-bold font-mono tracking-tight overflow-x-auto whitespace-nowrap">0</span>
+                            </div>
+                            <!-- Buttons layout grid -->
+                            <div class="grid grid-cols-4 gap-2">
+                                <button onclick="handleCalcPress('C')" class="p-4 bg-rose-500/10 text-rose-500 font-bold rounded-xl text-sm transition-all hover:bg-rose-500/20">C</button>
+                                <button onclick="handleCalcPress('(')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">(</button>
+                                <button onclick="handleCalcPress(')')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">)</button>
+                                <button onclick="handleCalcPress('/')" class="p-4 bg-brand-indigo/10 text-brand-indigo font-bold rounded-xl text-sm transition-all hover:bg-brand-indigo/20">/</button>
+                                
+                                <button onclick="handleCalcPress('7')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">7</button>
+                                <button onclick="handleCalcPress('8')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">8</button>
+                                <button onclick="handleCalcPress('9')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">9</button>
+                                <button onclick="handleCalcPress('*')" class="p-4 bg-brand-indigo/10 text-brand-indigo font-bold rounded-xl text-sm transition-all hover:bg-brand-indigo/20">*</button>
+
+                                <button onclick="handleCalcPress('4')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">4</button>
+                                <button onclick="handleCalcPress('5')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">5</button>
+                                <button onclick="handleCalcPress('6')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">6</button>
+                                <button onclick="handleCalcPress('-')" class="p-4 bg-brand-indigo/10 text-brand-indigo font-bold rounded-xl text-sm transition-all hover:bg-brand-indigo/20">-</button>
+
+                                <button onclick="handleCalcPress('1')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">1</button>
+                                <button onclick="handleCalcPress('2')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">2</button>
+                                <button onclick="handleCalcPress('3')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">3</button>
+                                <button onclick="handleCalcPress('+')" class="p-4 bg-brand-indigo/10 text-brand-indigo font-bold rounded-xl text-sm transition-all hover:bg-brand-indigo/20">+</button>
+
+                                <button onclick="handleCalcPress('0')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">0</button>
+                                <button onclick="handleCalcPress('.')" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-sm transition-all hover:opacity-80">.</button>
+                                <button onclick="copyCalcResult()" class="p-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl text-xs transition-all hover:opacity-80">Copy</button>
+                                <button onclick="handleCalcPress('=')" class="p-4 bg-brand-indigo text-white font-bold rounded-xl text-sm transition-all hover:bg-brand-indigo/95">=</button>
+                            </div>
+                        </div>
+                    `;
+                
+                case 'len':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">Value</label>
+                                    <input type="number" id="len-val" value="1" oninput="runLengthConv()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">From Unit</label>
+                                    <select id="len-from" onchange="runLengthConv()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 outline-none">
+                                        <option value="mm">Millimeters (mm)</option>
+                                        <option value="cm" selected>Centimeters (cm)</option>
+                                        <option value="m">Meters (m)</option>
+                                        <option value="km">Kilometers (km)</option>
+                                        <option value="in">Inches (in)</option>
+                                        <option value="ft">Feet (ft)</option>
+                                        <option value="yd">Yards (yd)</option>
+                                        <option value="mi">Miles (mi)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="border-t border-slate-200/50 dark:border-slate-800/50 pt-4 mt-6">
+                                <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Conversions Output</h4>
+                                <div id="len-output-grid" class="grid grid-cols-2 gap-2 text-xs font-semibold">
+                                    <!-- Populated on value change -->
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'weight':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">Value</label>
+                                    <input type="number" id="weight-val" value="1" oninput="runWeightConv()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">From Unit</label>
+                                    <select id="weight-from" onchange="runWeightConv()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 outline-none">
+                                        <option value="g">Grams (g)</option>
+                                        <option value="kg" selected>Kilograms (kg)</option>
+                                        <option value="lb">Pounds (lbs)</option>
+                                        <option value="oz">Ounces (oz)</option>
+                                        <option value="ton">Tons</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="border-t border-slate-200/50 dark:border-slate-800/50 pt-4 mt-6">
+                                <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Conversions Output</h4>
+                                <div id="weight-output-grid" class="grid grid-cols-2 gap-2 text-xs font-semibold">
+                                    <!-- Populated -->
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'temp':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">Value</label>
+                                    <input type="number" id="temp-val" value="25" oninput="runTempConv()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">From Unit</label>
+                                    <select id="temp-from" onchange="runTempConv()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 outline-none">
+                                        <option value="C" selected>Celsius (°C)</option>
+                                        <option value="F">Fahrenheit (°F)</option>
+                                        <option value="K">Kelvin (K)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="border-t border-slate-200/50 dark:border-slate-800/50 pt-4 mt-6">
+                                <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Conversions Output</h4>
+                                <div id="temp-output-grid" class="grid grid-cols-2 gap-2 text-xs font-semibold">
+                                    <!-- Populated -->
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'currency':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="col-span-2 space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">Amount</label>
+                                    <input type="number" id="curr-amount" value="100" oninput="runCurrencyConv()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">Source Base</label>
+                                    <select id="curr-from" onchange="runCurrencyConv()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 outline-none">
+                                        <option value="USD" selected>USD</option>
+                                        <option value="EUR">EUR</option>
+                                        <option value="GBP">GBP</option>
+                                        <option value="INR">INR</option>
+                                        <option value="JPY">JPY</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="border-t border-slate-200/50 dark:border-slate-800/50 pt-4 mt-6">
+                                <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Conversions Output</h4>
+                                <div id="currency-output-grid" class="space-y-2 text-xs font-semibold">
+                                    <!-- Populated on value change -->
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'age':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <div class="space-y-1">
+                                <label class="text-xs font-semibold text-slate-400">Date of Birth</label>
+                                <input type="date" id="age-dob" value="1995-06-15" onchange="calculateAge()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                            </div>
+                            <div class="grid grid-cols-3 gap-3 text-center" id="age-dashboard">
+                                <div class="p-3 border dark:border-slate-800 rounded-xl">
+                                    <div class="text-lg font-extrabold text-brand-indigo" id="age-yrs">0</div>
+                                    <div class="text-[9px] text-slate-400 uppercase">Years</div>
+                                </div>
+                                <div class="p-3 border dark:border-slate-800 rounded-xl">
+                                    <div class="text-lg font-extrabold text-brand-indigo" id="age-mths">0</div>
+                                    <div class="text-[9px] text-slate-400 uppercase">Months</div>
+                                </div>
+                                <div class="p-3 border dark:border-slate-800 rounded-xl">
+                                    <div class="text-lg font-extrabold text-brand-indigo" id="age-days">0</div>
+                                    <div class="text-[9px] text-slate-400 uppercase">Days</div>
+                                </div>
+                            </div>
+                            <!-- Countdown Area -->
+                            <div class="p-4 border dark:border-slate-800/60 rounded-xl bg-slate-50/40 dark:bg-slate-900/10">
+                                <div class="text-xs font-bold text-slate-400">Countdown to next birthday 🎂</div>
+                                <div class="text-sm font-extrabold text-slate-900 dark:text-white mt-1" id="age-next-bday">Calculating...</div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'bmi':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">Height (cm)</label>
+                                    <input type="number" id="bmi-height" value="175" oninput="calculateBMI()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">Weight (kg)</label>
+                                    <input type="number" id="bmi-weight" value="70" oninput="calculateBMI()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                                </div>
+                            </div>
+                            <div class="p-4 border dark:border-slate-800/50 rounded-xl text-center space-y-2">
+                                <div class="text-xs font-bold uppercase tracking-widest text-slate-400">BMI Metric Score</div>
+                                <div class="text-4xl font-extrabold text-brand-indigo" id="bmi-score">22.9</div>
+                                <div class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950/50 text-emerald-500" id="bmi-category">Normal Weight</div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'percentage':
+                    return `
+                        <div class="max-w-md mx-auto space-y-6">
+                            <!-- Formula 1 -->
+                            <div class="space-y-2">
+                                <h4 class="text-xs font-bold uppercase text-slate-400">Percentage of Value</h4>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" id="p1-x" value="15" oninput="calcPercentF1()" class="w-20 p-2 text-sm border dark:border-slate-800 rounded-xl bg-transparent text-center outline-none">
+                                    <span class="text-xs">% of</span>
+                                    <input type="number" id="p1-y" value="200" oninput="calcPercentF1()" class="w-24 p-2 text-sm border dark:border-slate-800 rounded-xl bg-transparent text-center outline-none">
+                                    <span class="text-xs">=</span>
+                                    <span class="font-bold text-sm text-brand-indigo" id="p1-res">30</span>
+                                </div>
+                            </div>
+                            <!-- Formula 2 -->
+                            <div class="space-y-2">
+                                <h4 class="text-xs font-bold uppercase text-slate-400">Percentage Increase/Decrease</h4>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">From</span>
+                                    <input type="number" id="p2-x" value="100" oninput="calcPercentF2()" class="w-24 p-2 text-sm border dark:border-slate-800 rounded-xl bg-transparent text-center outline-none">
+                                    <span class="text-xs">to</span>
+                                    <input type="number" id="p2-y" value="150" oninput="calcPercentF2()" class="w-24 p-2 text-sm border dark:border-slate-800 rounded-xl bg-transparent text-center outline-none">
+                                    <span class="text-xs">=</span>
+                                    <span class="font-bold text-sm text-brand-indigo" id="p2-res">+50%</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'timezone':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">World Clocks Indicator</h4>
+                            <div class="space-y-3" id="timezone-clocks">
+                                <!-- Populated on load/interval -->
+                            </div>
+                        </div>
+                    `;
+
+                case 'qrcode':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4 text-center">
+                            <div class="space-y-1 text-left">
+                                <label class="text-xs font-semibold text-slate-400">Share Link / Text</label>
+                                <input type="text" id="qr-input" value="https://toolsphere.app" oninput="generateQRCode()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                            </div>
+                            <div class="flex items-center justify-center p-4 border dark:border-slate-800/50 rounded-2xl w-48 h-48 mx-auto bg-white">
+                                <div id="qrcode-container"></div>
+                            </div>
+                            <button onclick="downloadQRCode()" class="bg-brand-indigo text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md">Download PNG Code</button>
+                        </div>
+                    `;
+
+                case 'password':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <div class="relative">
+                                <input type="text" id="pass-output" readonly class="w-full p-4 pr-12 font-mono text-sm border dark:border-slate-800 rounded-xl bg-slate-50/40 dark:bg-slate-900/10 outline-none">
+                                <button onclick="copyPasswordOutput()" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-bold text-brand-indigo">Copy</button>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs">
+                                    <span class="font-semibold text-slate-400">Length</span>
+                                    <span class="font-bold" id="pass-len-label">16</span>
+                                </div>
+                                <input type="range" id="pass-len" min="6" max="32" value="16" oninput="generateStrongPassword()" class="w-full accent-brand-indigo">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="p-lower" checked onchange="generateStrongPassword()" class="rounded accent-brand-indigo"> Lowercase</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="p-upper" checked onchange="generateStrongPassword()" class="rounded accent-brand-indigo"> Uppercase</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="p-nums" checked onchange="generateStrongPassword()" class="rounded accent-brand-indigo"> Numbers</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="p-syms" checked onchange="generateStrongPassword()" class="rounded accent-brand-indigo"> Symbols</label>
+                            </div>
+                            <div class="p-3 border dark:border-slate-800 rounded-xl text-center text-xs">
+                                <span class="font-semibold">Strength:</span>
+                                <span class="font-bold text-emerald-500 ml-1" id="pass-strength">Extremely Strong</span>
+                            </div>
+                        </div>
+                    `;
+
+                case 'text':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <textarea id="text-input" rows="5" oninput="runTextUtilities()" placeholder="Type or paste your text here..." class="w-full p-3 font-mono text-xs border dark:border-slate-800 rounded-xl bg-transparent outline-none resize-none"></textarea>
+                            <div class="grid grid-cols-3 gap-2 text-center text-xs font-semibold">
+                                <div class="p-2 border dark:border-slate-800 rounded-xl">
+                                    <div class="text-brand-indigo" id="txt-words">0</div>
+                                    <div class="text-[9px] text-slate-400 uppercase">Words</div>
+                                </div>
+                                <div class="p-2 border dark:border-slate-800 rounded-xl">
+                                    <div class="text-brand-indigo" id="txt-chars">0</div>
+                                    <div class="text-[9px] text-slate-400 uppercase">Chars</div>
+                                </div>
+                                <div class="p-2 border dark:border-slate-800 rounded-xl">
+                                    <div class="text-brand-indigo" id="txt-read">0m</div>
+                                    <div class="text-[9px] text-slate-400 uppercase">Reading</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 justify-center flex-wrap">
+                                <button onclick="transformCase('upper')" class="bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg text-[10px] font-bold">UPPERCASE</button>
+                                <button onclick="transformCase('lower')" class="bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg text-[10px] font-bold">lowercase</button>
+                                <button onclick="stripExtraSpaces()" class="bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg text-[10px] font-bold">Trim Spaces</button>
+                            </div>
+                        </div>
+                    `;
+
+                case 'emi':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold text-slate-400">Loan Principal</label>
+                                    <input type="number" id="emi-principal" value="100000" oninput="runEMICalc()" class="w-full p-2.5 text-xs border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold text-slate-400">Rate (%)</label>
+                                    <input type="number" id="emi-rate" value="7.5" step="0.1" oninput="runEMICalc()" class="w-full p-2.5 text-xs border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold text-slate-400">Years</label>
+                                    <input type="number" id="emi-years" value="5" oninput="runEMICalc()" class="w-full p-2.5 text-xs border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 items-center pt-4">
+                                <div class="space-y-2">
+                                    <div>
+                                        <div class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Monthly Payment</div>
+                                        <div class="text-2xl font-extrabold text-brand-indigo" id="emi-monthly-val">$0</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-[10px] text-slate-400 uppercase tracking-widest font-bold font-semibold">Total Payments</div>
+                                        <div class="text-sm font-extrabold" id="emi-total-val">$0</div>
+                                    </div>
+                                </div>
+                                <!-- Chart Canvas Container -->
+                                <div class="w-32 h-32 mx-auto relative">
+                                    <canvas id="emi-pie-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'unit':
+                    return `
+                        <div class="max-w-md mx-auto space-y-4">
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="col-span-2 space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">Value</label>
+                                    <input type="number" id="u-val" value="1" oninput="runHubConv()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-transparent outline-none">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">Category</label>
+                                    <select id="u-cat" onchange="updateHubSelections()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 outline-none">
+                                        <option value="speed" selected>Speed</option>
+                                        <option value="storage">Storage size</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 pt-2">
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">From</label>
+                                    <select id="u-from" onchange="runHubConv()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 outline-none"></select>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-400">To</label>
+                                    <select id="u-to" onchange="runHubConv()" class="w-full p-3 text-sm border dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 outline-none"></select>
+                                </div>
+                            </div>
+                            <div class="p-4 border dark:border-slate-800/50 rounded-xl text-center mt-4">
+                                <div class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Converted Output</div>
+                                <div class="text-3xl font-extrabold text-brand-indigo mt-1" id="u-output">0</div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'random':
+                    return `
+                        <div class="max-w-md mx-auto space-y-6">
+                            <!-- Section 1: Number Generator -->
+                            <div class="p-4 border dark:border-slate-800 rounded-xl space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400">Random Number</h4>
+                                    <button onclick="genRandomNumber()" class="bg-brand-indigo text-white px-3 py-1 rounded-lg text-[10px] font-semibold">Generate</button>
+                                </div>
+                                <div class="flex items-center gap-2 text-xs">
+                                    <input type="number" id="rand-min" value="1" class="w-16 p-1 text-center border dark:border-slate-800 rounded bg-transparent outline-none">
+                                    <span>to</span>
+                                    <input type="number" id="rand-max" value="100" class="w-16 p-1 text-center border dark:border-slate-800 rounded bg-transparent outline-none">
+                                    <span class="font-extrabold text-base text-brand-indigo ml-auto" id="rand-num-res">50</span>
+                                </div>
+                            </div>
+
+                            <!-- Section 2: Coin Flipper -->
+                            <div class="p-4 border dark:border-slate-800 rounded-xl flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400">Flip Coin</h4>
+                                    <div class="text-sm font-extrabold text-slate-900 dark:text-white mt-1" id="rand-coin-res">Heads</div>
+                                </div>
+                                <button onclick="flipCoin()" class="border border-brand-indigo text-brand-indigo dark:text-indigo-400 px-4 py-1.5 rounded-lg text-xs font-bold">Flip 🪙</button>
+                            </div>
+
+                            <!-- Section 3: Spawn Colors -->
+                            <div class="p-4 border dark:border-slate-800 rounded-xl flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400">Random Hex Color</h4>
+                                    <div class="text-sm font-extrabold text-slate-900 dark:text-white mt-1" id="rand-hex-val">#6366F1</div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div id="rand-hex-color-box" class="w-8 h-8 rounded-lg border shadow-inner transition-colors" style="background: #6366f1;"></div>
+                                    <button onclick="genRandomColor()" class="bg-brand-indigo text-white px-3 py-1.5 rounded-lg text-xs font-bold">Generate</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                
+                default:
+                    return `<p class="text-center text-xs">Workspace is preparing...</p>`;
+            }
+        }
+
+
+        // ==========================================
+        //  WORKSPACE INITIALIZERS & EVENT LOOPS
+        // ==========================================
+        function initializeToolInteractiveEvents(id) {
+            switch(id) {
+                case 'calc':
+                    AppState.calculator.currentInput = '';
+                    updateCalcDisplay('0');
+                    break;
+                case 'len':
+                    runLengthConv();
+                    break;
+                case 'weight':
+                    runWeightConv();
+                    break;
+                case 'temp':
+                    runTempConv();
+                    break;
+                case 'currency':
+                    runCurrencyConv();
+                    break;
+                case 'age':
+                    calculateAge();
+                    break;
+                case 'bmi':
+                    calculateBMI();
+                    break;
+                case 'percentage':
+                    calcPercentF1();
+                    calcPercentF2();
+                    break;
+                case 'timezone':
+                    startTimezoneInterval();
+                    break;
+                case 'qrcode':
+                    generateQRCode();
+                    break;
+                case 'password':
+                    generateStrongPassword();
+                    break;
+                case 'text':
+                    runTextUtilities();
+                    break;
+                case 'emi':
+                    runEMICalc();
+                    break;
+                case 'unit':
+                    updateHubSelections();
+                    break;
+                case 'random':
+                    genRandomNumber();
+                    flipCoin();
+                    genRandomColor();
+                    break;
+            }
+        }
+
+
+        // ==========================================
+        //  PREMIUM TOOL-SPECIFIC LOGIC IMPL
+        // ==========================================
+
+        // 1. SMART CALCULATOR
+        function handleCalcPress(val) {
+            let disp = AppState.calculator.currentInput;
+            if (val === 'C') {
+                AppState.calculator.currentInput = '';
+                updateCalcDisplay('0');
+            } else if (val === '=') {
+                try {
+                    // Safe basic evaluation routine
+                    const cleanVal = disp.replace(/[^-()\d/*+.]/g, '');
+                    const result = eval(cleanVal);
+                    
+                    document.getElementById('calc-history').textContent = `${disp} =`;
+                    AppState.calculator.currentInput = result.toString();
+                    updateCalcDisplay(result);
+                } catch (e) {
+                    updateCalcDisplay("Error");
+                    AppState.calculator.currentInput = '';
+                }
+            } else {
+                AppState.calculator.currentInput += val;
+                updateCalcDisplay(AppState.calculator.currentInput);
+            }
+        }
+        function updateCalcDisplay(text) {
+            const el = document.getElementById('calc-display');
+            if (el) el.textContent = text;
+        }
+        function copyCalcResult() {
+            const res = document.getElementById('calc-display').textContent;
+            navigator.clipboard.writeText(res).then(() => {
+                showToast("Result copied to clipboard!");
+            });
+        }
+
+        // 2. LENGTH CONVERTER
+        const lengthFactors = {
+            mm: 0.001,
+            cm: 0.01,
+            m: 1,
+            km: 1000,
+            in: 0.0254,
+            ft: 0.3048,
+            yd: 0.9144,
+            mi: 1609.34
+        };
+        function runLengthConv() {
+            const valInput = document.getElementById('len-val');
+            const fromUnit = document.getElementById('len-from').value;
+            const grid = document.getElementById('len-output-grid');
+            if (!valInput || !grid) return;
+
+            const val = parseFloat(valInput.value) || 0;
+            // Normalize to meters
+            const meters = val * lengthFactors[fromUnit];
+
+            grid.innerHTML = '';
+            Object.keys(lengthFactors).forEach(unit => {
+                const converted = (meters / lengthFactors[unit]).toFixed(4);
+                const item = document.createElement('div');
+                item.className = "p-2.5 border dark:border-slate-800 rounded-xl bg-slate-100/10";
+                item.innerHTML = `
+                    <div class="text-slate-400 uppercase text-[9px]">${unit}</div>
+                    <div class="text-slate-900 dark:text-white font-bold">${converted}</div>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        // 3. WEIGHT CONVERTER
+        const weightFactors = {
+            g: 1,
+            kg: 1000,
+            lb: 453.592,
+            oz: 28.3495,
+            ton: 907185
+        };
+        function runWeightConv() {
+            const val = parseFloat(document.getElementById('weight-val').value) || 0;
+            const fromUnit = document.getElementById('weight-from').value;
+            const grid = document.getElementById('weight-output-grid');
+            if (!grid) return;
+
+            // Convert to base: grams
+            const grams = val * weightFactors[fromUnit];
+            grid.innerHTML = '';
+            Object.keys(weightFactors).forEach(unit => {
+                const converted = (grams / weightFactors[unit]).toFixed(4);
+                const item = document.createElement('div');
+                item.className = "p-2.5 border dark:border-slate-800 rounded-xl bg-slate-100/10";
+                item.innerHTML = `
+                    <div class="text-slate-400 uppercase text-[9px]">${unit}</div>
+                    <div class="text-slate-900 dark:text-white font-bold">${converted}</div>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        // 4. TEMPERATURE CONVERTER
+        function runTempConv() {
+            const val = parseFloat(document.getElementById('temp-val').value) || 0;
+            const from = document.getElementById('temp-from').value;
+            const grid = document.getElementById('temp-output-grid');
+            if (!grid) return;
+
+            let celsius = 0;
+            if (from === 'C') celsius = val;
+            else if (from === 'F') celsius = (val - 32) * 5/9;
+            else if (from === 'K') celsius = val - 273.15;
+
+            const out = {
+                Celsius: celsius.toFixed(2) + " °C",
+                Fahrenheit: (celsius * 9/5 + 32).toFixed(2) + " °F",
+                Kelvin: (celsius + 273.15).toFixed(2) + " K"
+            };
+
+            grid.innerHTML = '';
+            Object.keys(out).forEach(key => {
+                const item = document.createElement('div');
+                item.className = "p-2.5 border dark:border-slate-800 rounded-xl bg-slate-100/10";
+                item.innerHTML = `
+                    <div class="text-slate-400 uppercase text-[9px]">${key}</div>
+                    <div class="text-slate-900 dark:text-white font-bold">${out[key]}</div>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        // 5. CURRENCY CONVERTER (Offline Mock Rates for Reliability)
+        const mockCurrencyRates = {
+            USD: { USD: 1, EUR: 0.92, GBP: 0.79, INR: 83.34, JPY: 151.23 },
+            EUR: { USD: 1.09, EUR: 1, GBP: 0.86, INR: 90.62, JPY: 164.44 },
+            GBP: { USD: 1.27, EUR: 1.16, GBP: 1, INR: 105.51, JPY: 191.46 },
+            INR: { USD: 0.012, EUR: 0.011, GBP: 0.0095, INR: 1, JPY: 1.81 },
+            JPY: { USD: 0.0066, EUR: 0.0061, GBP: 0.0052, INR: 0.55, JPY: 1 }
+        };
+        function runCurrencyConv() {
+            const amt = parseFloat(document.getElementById('curr-amount').value) || 0;
+            const from = document.getElementById('curr-from').value;
+            const grid = document.getElementById('currency-output-grid');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+            const matrix = mockCurrencyRates[from];
+            if (!matrix) return;
+
+            Object.keys(matrix).forEach(curr => {
+                const value = (amt * matrix[curr]).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const item = document.createElement('div');
+                item.className = "p-3 border dark:border-slate-800 rounded-xl bg-slate-100/10 flex justify-between items-center";
+                item.innerHTML = `
+                    <span class="text-slate-400 uppercase font-bold text-xs">${curr}</span>
+                    <span class="text-slate-900 dark:text-white font-extrabold text-sm">${value}</span>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        // 6. AGE CALCULATOR
+        function calculateAge() {
+            const dobVal = document.getElementById('age-dob').value;
+            if (!dobVal) return;
+
+            const dob = new Date(dobVal);
+            const today = new Date();
+
+            let years = today.getFullYear() - dob.getFullYear();
+            let months = today.getMonth() - dob.getMonth();
+            let days = today.getDate() - dob.getDate();
+
+            if (days < 0) {
+                months--;
+                // Fetch last day of prior month
+                const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            document.getElementById('age-yrs').textContent = years;
+            document.getElementById('age-mths').textContent = months;
+            document.getElementById('age-days').textContent = days;
+
+            // Birthday Countdown calculation
+            const nextBirthday = new Date(today.getFullYear(), dob.getMonth(), dob.getDate());
+            if (today > nextBirthday) {
+                nextBirthday.setFullYear(today.getFullYear() + 1);
+            }
+            const diffTime = Math.abs(nextBirthday - today);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('age-next-bday').textContent = diffDays === 365 || diffDays === 0 ? "Happy Birthday! 🎉" : `${diffDays} days remaining`;
+        }
+
+        // 7. BMI CALCULATOR
+        function calculateBMI() {
+            const height = parseFloat(document.getElementById('bmi-height').value) || 0;
+            const weight = parseFloat(document.getElementById('bmi-weight').value) || 0;
+            
+            if (height === 0) return;
+            const bmi = weight / ((height / 100) * (height / 100));
+            document.getElementById('bmi-score').textContent = bmi.toFixed(1);
+
+            const catEl = document.getElementById('bmi-category');
+            if (bmi < 18.5) {
+                catEl.textContent = "Underweight";
+                catEl.className = "inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-500";
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                catEl.textContent = "Normal Weight";
+                catEl.className = "inline-block px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-500";
+            } else {
+                catEl.textContent = "Overweight";
+                catEl.className = "inline-block px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-500";
+            }
+        }
+
+        // 8. PERCENTAGE CALCULATOR
+        function calcPercentF1() {
+            const x = parseFloat(document.getElementById('p1-x').value) || 0;
+            const y = parseFloat(document.getElementById('p1-y').value) || 0;
+            document.getElementById('p1-res').textContent = (x / 100 * y).toFixed(2);
+        }
+        function calcPercentF2() {
+            const x = parseFloat(document.getElementById('p2-x').value) || 0;
+            const y = parseFloat(document.getElementById('p2-y').value) || 0;
+            if (x === 0) return;
+            const diff = ((y - x) / x * 100);
+            const prefix = diff > 0 ? "+" : "";
+            document.getElementById('p2-res').textContent = prefix + diff.toFixed(1) + "%";
+        }
+
+        // 9. TIME ZONE CONVERTER
+        let timezoneTimer = null;
+        function startTimezoneInterval() {
+            if (timezoneTimer) clearInterval(timezoneTimer);
+            updateTimezoneClocks();
+            timezoneTimer = setInterval(updateTimezoneClocks, 1000);
+        }
+        const clockTzConfigs = [
+            { label: "London (GMT/BST)", tz: "Europe/London" },
+            { label: "New York (EST/EDT)", tz: "America/New_York" },
+            { label: "Tokyo (JST)", tz: "Asia/Tokyo" },
+            { label: "Mumbai (IST)", tz: "Asia/Kolkata" }
+        ];
+        function updateTimezoneClocks() {
+            const container = document.getElementById('timezone-clocks');
+            if (!container) {
+                clearInterval(timezoneTimer);
+                return;
+            }
+            container.innerHTML = '';
+            clockTzConfigs.forEach(clock => {
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: clock.tz,
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                    hour12: true
+                });
+                const timeStr = formatter.format(new Date());
+                const hours = new Date(new Date().toLocaleString("en-US", {timeZone: clock.tz})).getHours();
+                const isNight = hours >= 18 || hours < 6;
+
+                const card = document.createElement('div');
+                card.className = "p-3 border dark:border-slate-800 rounded-xl flex items-center justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="font-bold text-sm">${clock.label}</div>
+                        <div class="text-[9px] text-slate-400 uppercase tracking-widest">${isNight ? '🌙 Night cycle' : '☀️ Day cycle'}</div>
+                    </div>
+                    <span class="text-sm font-mono font-extrabold text-brand-indigo">${timeStr}</span>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 10. QR CODE GENERATOR
+        function generateQRCode() {
+            const txt = document.getElementById('qr-input').value;
+            const target = document.getElementById('qrcode-container');
+            if (!target) return;
+            target.innerHTML = '';
+            
+            // Instantiates via QRCodeJS
+            new QRCode(target, {
+                text: txt,
+                width: 140,
+                height: 140,
+                colorDark: "#13162b",
+                colorLight: "#ffffff"
+            });
+        }
+        function downloadQRCode() {
+            const img = document.querySelector('#qrcode-container img');
+            if (!img) return;
+            const a = document.createElement('a');
+            a.href = img.src;
+            a.download = `toolsphere-qrcode.png`;
+            a.click();
+        }
+
+        // 11. PASSWORD GENERATOR
+        function generateStrongPassword() {
+            const length = parseInt(document.getElementById('pass-len').value);
+            document.getElementById('pass-len-label').textContent = length;
+
+            const lower = "abcdefghijklmnopqrstuvwxyz";
+            const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const nums = "0123456789";
+            const syms = "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+
+            let charPool = "";
+            if (document.getElementById('p-lower').checked) charPool += lower;
+            if (document.getElementById('p-upper').checked) charPool += upper;
+            if (document.getElementById('p-nums').checked) charPool += nums;
+            if (document.getElementById('p-syms').checked) charPool += syms;
+
+            if (charPool === "") {
+                document.getElementById('pass-output').value = "Select a character type";
+                return;
+            }
+
+            let pass = "";
+            for (let i = 0; i < length; i++) {
+                const randIndex = Math.floor(Math.random() * charPool.length);
+                pass += charPool.charAt(randIndex);
+            }
+
+            document.getElementById('pass-output').value = pass;
+            
+            // Password strength basic estimation
+            const strEl = document.getElementById('pass-strength');
+            if (length < 8) {
+                strEl.textContent = "Weak / Short";
+                strEl.className = "font-bold text-rose-500 ml-1";
+            } else if (length >= 8 && length < 14) {
+                strEl.textContent = "Moderate Quality";
+                strEl.className = "font-bold text-amber-500 ml-1";
+            } else {
+                strEl.textContent = "Extremely Strong";
+                strEl.className = "font-bold text-emerald-500 ml-1";
+            }
+        }
+        function copyPasswordOutput() {
+            const pass = document.getElementById('pass-output').value;
+            navigator.clipboard.writeText(pass).then(() => {
+                showToast("Password copied! 🔑");
+            });
+        }
+
+        // 12. TEXT UTILITIES
+        function runTextUtilities() {
+            const text = document.getElementById('text-input').value;
+            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            const chars = text.length;
+            const readingTime = Math.ceil(words / 200); // Average 200 wpm
+
+            document.getElementById('txt-words').textContent = words;
+            document.getElementById('txt-chars').textContent = chars;
+            document.getElementById('txt-read').textContent = readingTime + "m";
+        }
+        function transformCase(mode) {
+            const input = document.getElementById('text-input');
+            if (mode === 'upper') {
+                input.value = input.value.toUpperCase();
+            } else {
+                input.value = input.value.toLowerCase();
+            }
+            runTextUtilities();
+        }
+        function stripExtraSpaces() {
+            const input = document.getElementById('text-input');
+            input.value = input.value.replace(/\s+/g, ' ').trim();
+            runTextUtilities();
+        }
+
+        // 13. LOAN EMI CALCULATOR
+        let emiChartRef = null;
+        function runEMICalc() {
+            const principal = parseFloat(document.getElementById('emi-principal').value) || 0;
+            const annualRate = parseFloat(document.getElementById('emi-rate').value) || 0;
+            const years = parseFloat(document.getElementById('emi-years').value) || 0;
+
+            const r = annualRate / 12 / 100;
+            const n = years * 12;
+
+            let emi = 0;
+            if (r > 0 && n > 0) {
+                emi = (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            } else {
+                emi = principal / n;
+            }
+
+            const totalRepayment = emi * n;
+            const totalInterest = totalRepayment - principal;
+
+            document.getElementById('emi-monthly-val').textContent = isNaN(emi) ? "$0" : `$${emi.toFixed(2)}`;
+            document.getElementById('emi-total-val').textContent = isNaN(totalRepayment) ? "$0" : `$${totalRepayment.toFixed(2)}`;
+
+            // Render ChartJS Doughnut
+            const canvas = document.getElementById('emi-pie-chart');
+            if (!canvas) return;
+
+            if (emiChartRef) {
+                emiChartRef.destroy();
+            }
+
+            emiChartRef = new Chart(canvas, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Principal', 'Interest'],
+                    datasets: [{
+                        data: [principal, isNaN(totalInterest) ? 0 : totalInterest],
+                        backgroundColor: ['#6366f1', '#a855f7'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // 14. ADVANCED UNIT CONVERTER HUB
+        const hubConversions = {
+            speed: {
+                from: { mps: "Meters per second", kmh: "Kilometers per hour", mph: "Miles per hour" },
+                factors: { mps: 1, kmh: 0.277778, mph: 0.44704 }
+            },
+            storage: {
+                from: { B: "Bytes", KB: "Kilobytes", MB: "Megabytes", GB: "Gigabytes" },
+                factors: { B: 1, KB: 1024, MB: 1048576, GB: 1073741824 }
+            }
+        };
+        function updateHubSelections() {
+            const cat = document.getElementById('u-cat').value;
+            const fromSel = document.getElementById('u-from');
+            const toSel = document.getElementById('u-to');
+            const units = hubConversions[cat].from;
+
+            fromSel.innerHTML = '';
+            toSel.innerHTML = '';
+            Object.keys(units).forEach(key => {
+                fromSel.innerHTML += `<option value="${key}">${units[key]}</option>`;
+                toSel.innerHTML += `<option value="${key}">${units[key]}</option>`;
+            });
+            runHubConv();
+        }
+        function runHubConv() {
+            const val = parseFloat(document.getElementById('u-val').value) || 0;
+            const cat = document.getElementById('u-cat').value;
+            const from = document.getElementById('u-from').value;
+            const to = document.getElementById('u-to').value;
+
+            if (!from || !to) return;
+
+            const factors = hubConversions[cat].factors;
+            // Base conversion
+            const baseVal = val * factors[from];
+            const output = baseVal / factors[to];
+
+            document.getElementById('u-output').textContent = output.toFixed(4);
+        }
+
+        // 15. RANDOM GENERATOR SUITE
+        function genRandomNumber() {
+            const min = parseInt(document.getElementById('rand-min').value) || 1;
+            const max = parseInt(document.getElementById('rand-max').value) || 100;
+            const rand = Math.floor(Math.random() * (max - min + 1)) + min;
+            document.getElementById('rand-num-res').textContent = rand;
+        }
+        function flipCoin() {
+            const side = Math.random() > 0.5 ? "Heads" : "Tails";
+            document.getElementById('rand-coin-res').textContent = side;
+        }
+        function genRandomColor() {
+            const hex = "#" + Math.floor(Math.random()*16777215).toString(16).toUpperCase();
+            document.getElementById('rand-hex-val').textContent = hex;
+            document.getElementById('rand-hex-color-box').style.backgroundColor = hex;
+        }
+
+
+        // ==========================================
+        //  PERSISTENCE STORE & UTILS
+        // ==========================================
+        function savePersistenceState() {
+            localStorage.setItem('ToolSphere_Local_State_v1', JSON.stringify({
+                theme: AppState.theme,
+                favorites: AppState.favorites,
+                recents: AppState.recents
+            }));
+        }
+
+        function loadPersistenceState() {
+            const local = localStorage.getItem('ToolSphere_Local_State_v1');
+            if (local) {
+                try {
+                    const parsed = JSON.parse(local);
+                    AppState.theme = parsed.theme || 'dark';
+                    AppState.favorites = parsed.favorites || [];
+                    AppState.recents = parsed.recents || [];
+                } catch(e) {
+                    console.warn("Storage profile error; restoring default states.", e);
+                }
+            }
+        }
+
+        function clearUserData() {
+            localStorage.clear();
+            AppState.favorites = [];
+            AppState.recents = [];
+            showToast("Local cache reset cleanly!");
+            resetView();
+            renderRecentBar();
+            renderToolGrid();
+        }
+
+        function showShortcutsHelp() {
+            showToast("Search Shortcut: Press '/' or 'Ctrl+K' ⌨️");
+        }
+
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const text = document.getElementById('toast-text');
+            text.textContent = message;
+            
+            toast.style.transform = 'translateY(0)';
+            toast.style.opacity = '1';
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.style.transform = 'translateY(80px)';
+                toast.style.opacity = '0';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
